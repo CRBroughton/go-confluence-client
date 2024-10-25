@@ -83,7 +83,7 @@ func (apiClient *APIClient) GetPageByID(pageID string) (*Page, error) {
 }
 
 func (apiClient *APIClient) UpdatePageByID(pageID, title, pageBody string, versionNumber int, versionMessage string) (*Page, error) {
-	url := fmt.Sprintf("%s/wiki/api/v2/pages/%s", apiClient.Url, pageID)
+	url := fmt.Sprintf("%s/wiki/api/v2/pages/%s?body-format=storage", apiClient.Url, pageID)
 
 	pageData := Page{
 		ID:     pageID,
