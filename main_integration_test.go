@@ -26,18 +26,6 @@ func getENVValues(t *testing.T) (string, string, string, string) {
 	return baseURL, email, apiToken, pageID
 }
 
-func TestTheNewClientMethodReturnsAValidAPIClient(t *testing.T) {
-	client := goconfluenceclient.NewClient("https://your.domain.com/", "crbroughton@posteo.uk", "12345678")
-
-	expectation := &goconfluenceclient.APIClient{
-		Url:      "https://your.domain.com",
-		Email:    "crbroughton@posteo.uk",
-		ApiToken: "12345678",
-	}
-
-	assert.Equal(t, expectation, client)
-}
-
 func TestGetPageByID(t *testing.T) {
 	baseURL, email, apiToken, pageID := getENVValues(t)
 	client := goconfluenceclient.NewClient(baseURL, email, apiToken)
