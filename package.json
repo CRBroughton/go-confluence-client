@@ -1,0 +1,25 @@
+{
+  "name": "go-confluence-client",
+  "author": "Craig R Broughton",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crbroughton/go-confluence-client.git"
+  },
+  "keywords": [
+    "bun",
+    "go",
+    "confluence",
+    "api",
+    "v2"
+  ],
+  "scripts": {
+    "changeset": "npx changeset",
+    "changeset:status": "npx changeset status --verbose",
+    "changeset:version": "npx changeset version"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.27.9"
+  }
+}
