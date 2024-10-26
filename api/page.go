@@ -1,4 +1,4 @@
-package goconfluenceclient
+package api
 
 import (
 	"bytes"
@@ -6,22 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 )
-
-type APIClient struct {
-	Url      string
-	Email    string
-	ApiToken string
-}
-
-func NewClient(url, email, apiToken string) *APIClient {
-	return &APIClient{
-		Url:      strings.TrimSuffix(url, "/"),
-		Email:    email,
-		ApiToken: apiToken,
-	}
-}
 
 type Page struct {
 	ID      string      `json:"id"`

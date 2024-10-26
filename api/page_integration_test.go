@@ -1,16 +1,16 @@
-package goconfluenceclient_test
+package api_test
 
 import (
 	"os"
 	"testing"
 
-	goconfluenceclient "github.com/crbroughton/go-confluence-client"
+	"github.com/crbroughton/go-confluence-client/api"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
 
 func getENVValues(t *testing.T) (string, string, string, string) {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("../.env")
 	if err != nil {
 		t.Fatalf("Error loading .env file: %v", err)
 	}
@@ -28,7 +28,7 @@ func getENVValues(t *testing.T) (string, string, string, string) {
 
 func TestGetPageByID(t *testing.T) {
 	baseURL, email, apiToken, pageID := getENVValues(t)
-	client := goconfluenceclient.NewClient(baseURL, email, apiToken)
+	client := api.NewClient(baseURL, email, apiToken)
 
 	page, err := client.GetPageByID(pageID)
 	if err != nil {
@@ -46,7 +46,7 @@ func TestGetPageByID(t *testing.T) {
 
 func TestUpdatePageByID(t *testing.T) {
 	baseURL, email, apiToken, pageID := getENVValues(t)
-	client := goconfluenceclient.NewClient(baseURL, email, apiToken)
+	client := api.NewClient(baseURL, email, apiToken)
 
 	page, err := client.GetPageByID(pageID)
 	if err != nil {
@@ -69,7 +69,7 @@ func TestUpdatePageByID(t *testing.T) {
 
 func ResetState(t *testing.T) {
 	baseURL, email, apiToken, pageID := getENVValues(t)
-	client := goconfluenceclient.NewClient(baseURL, email, apiToken)
+	client := api.NewClient(baseURL, email, apiToken)
 
 	page, err := client.GetPageByID(pageID)
 	if err != nil {

@@ -1,16 +1,16 @@
-package goconfluenceclient_test
+package api_test
 
 import (
 	"testing"
 
-	goconfluenceclient "github.com/crbroughton/go-confluence-client"
+	"github.com/crbroughton/go-confluence-client/api"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestTheNewClientMethodReturnsAValidAPIClient(t *testing.T) {
-	client := goconfluenceclient.NewClient("https://your.domain.com/", "crbroughton@posteo.uk", "12345678")
+	client := api.NewClient("https://your.domain.com/", "crbroughton@posteo.uk", "12345678")
 
-	expectation := &goconfluenceclient.APIClient{
+	expectation := &api.APIClient{
 		Url:      "https://your.domain.com",
 		Email:    "crbroughton@posteo.uk",
 		ApiToken: "12345678",
