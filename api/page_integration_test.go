@@ -1,33 +1,14 @@
 package api_test
 
 import (
-	"os"
 	"testing"
 
 	"github.com/crbroughton/go-confluence-client/api"
-	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
 
-func getENVValues(t *testing.T) (string, string, string, string) {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		t.Fatalf("Error loading .env file: %v", err)
-	}
-	baseURL := os.Getenv("CONFLUENCE_BASE_URL")
-	email := os.Getenv("CONFLUENCE_EMAIL")
-	apiToken := os.Getenv("CONFLUENCE_API_TOKEN")
-	pageID := os.Getenv("CONFLUENCE_PAGE_ID")
-
-	if baseURL == "" || email == "" || apiToken == "" || pageID == "" {
-		t.Skip("Skipping integration tests; Please provide the required environment variables")
-	}
-
-	return baseURL, email, apiToken, pageID
-}
-
 func TestGetPageByID(t *testing.T) {
-	baseURL, email, apiToken, pageID := getENVValues(t)
+	baseURL, email, apiToken, pageID := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
 	page, err := client.GetPageByID(pageID)
@@ -45,7 +26,7 @@ func TestGetPageByID(t *testing.T) {
 }
 
 func TestUpdatePageByID(t *testing.T) {
-	baseURL, email, apiToken, pageID := getENVValues(t)
+	baseURL, email, apiToken, pageID := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
 	page, err := client.GetPageByID(pageID)
@@ -68,7 +49,7 @@ func TestUpdatePageByID(t *testing.T) {
 }
 
 func ResetState(t *testing.T) {
-	baseURL, email, apiToken, pageID := getENVValues(t)
+	baseURL, email, apiToken, pageID := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
 	page, err := client.GetPageByID(pageID)

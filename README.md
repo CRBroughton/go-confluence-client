@@ -10,6 +10,7 @@ features:
 | ------------------------- |  :-------:  |
 | Pages - Get page by ID    |     ✅      |
 | Pages - Update page by ID |     ✅      |
+| Spaces - Get space by ID  |     ✅      |
 
 ## Testing
 
