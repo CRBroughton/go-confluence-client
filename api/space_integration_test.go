@@ -7,6 +7,23 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestGetSpaces(t *testing.T) {
+	baseURL, email, apiToken, _ := api.GetENVValues(t)
+	client := api.NewClient(baseURL, email, apiToken)
+
+	spaces, err := client.GetSpaces()
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+
+	assert.Equal(t, "163844", spaces[2].ID)
+	assert.Equal(t, "My first space", spaces[2].Name)
+
+	assert.Equal(t, "65853", spaces[1].ID)
+	assert.Equal(t, "Test Space", spaces[1].Name)
+
+}
+
 func TestGetSpaceByID(t *testing.T) {
 	baseURL, email, apiToken, _ := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)

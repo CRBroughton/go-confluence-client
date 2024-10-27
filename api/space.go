@@ -37,7 +37,36 @@ type Space struct {
 	} `json:"_links"`
 }
 
-func (apiClient APIClient) FindSpaceByKey(spaceKey string) (*Space, error) {
+func (apiClient *APIClient) GetSpaces() ([]Space, error) {
+	url := fmt.Sprintf("%s/wiki/api/v2/spaces", apiClient.Url)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.SetBasicAuth(apiClient.Email, apiClient.ApiToken)
+	req.Header.Set("Accept", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
+	var spaceResponse SpaceResponse
+	if err := json.NewDecoder(resp.Body).Decode(&spaceResponse); err != nil {
+		return nil, err
+	}
+
+	return spaceResponse.Results, nil
+}
+
+func (apiClient *APIClient) FindSpaceByKey(spaceKey string) (*Space, error) {
 	url := fmt.Sprintf("%s/wiki/api/v2/spaces", apiClient.Url)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
