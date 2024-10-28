@@ -8,10 +8,10 @@ features:
 
 | Feature                   |  Supported  |
 | ------------------------- |  :-------:  |
-| Pages - Get page by ID    |     ✅      |
-| Pages - Update page by ID |     ✅      |
-| Spaces - Get spaces       |     ✅      |
-| Spaces - Get space by ID  |     ✅      |
+| Pages - Get page by ID     |     ✅      |
+| Pages - Update page by ID  |     ✅      |
+| Spaces - Get spaces        |     ✅      |
+| Spaces - Get space by Key  |     ✅      |
 
 ## Testing
 
