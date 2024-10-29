@@ -6,8 +6,9 @@ and should be considered unstable.
 The below is a table of working and in-progress
 features:
 
-| Feature                   |  Supported  |
-| ------------------------- |  :-------:  |
+| Feature                    |  Supported  |
+| -------------------------  |  :-------:  |
+| Page - Get pages           |     ✅      |
 | Pages - Get page by ID     |     ✅      |
 | Pages - Update page by ID  |     ✅      |
 | Spaces - Get spaces        |     ✅      |
