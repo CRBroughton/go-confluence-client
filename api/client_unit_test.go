@@ -1,7 +1,6 @@
 package api_test
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -23,24 +22,20 @@ func TestTheNewClientMethodReturnsAValidAPIClient(t *testing.T) {
 	assert.Equal(t, expectation, client)
 }
 
-func setupMockHTTPServer() (*httptest.Server, error) {
-	var headerError error
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func setupMockHTTPServer(t *testing.T) *httptest.Server {
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Validate headers dynamically in each request
 		if r.Header.Get("Accept") != "application/json" {
-			headerError = fmt.Errorf("expected Accept header to be 'application/json', got '%s'", r.Header.Get("Accept"))
+			t.Errorf("Expected Accept header to be 'application/json', got '%s'", r.Header.Get("Accept"))
 		}
 		if r.Header.Get("Content-Type") != "application/json" {
-			headerError = fmt.Errorf("expected Content-Type header to be 'application/json', got '%s'", r.Header.Get("Content-Type"))
+			t.Errorf("Expected Content-Type header to be 'application/json', got '%s'", r.Header.Get("Content-Type"))
 		}
 		w.WriteHeader(http.StatusOK)
 	}))
-	return server, headerError
 }
 func TestAPIClientRequestSetsRequiredHeaders(t *testing.T) {
-	mockServer, err := setupMockHTTPServer()
-	if err != nil {
-		t.Fatalf("Setup mock server failed with header error: %v", err)
-	}
+	mockServer := setupMockHTTPServer(t)
 	defer mockServer.Close()
 
 	apiClient := &api.APIClient{
@@ -66,10 +61,7 @@ func TestAPIClientRequestSetsRequiredHeaders(t *testing.T) {
 }
 
 func TestAPIClientRequestMissingRequiredHeaders(t *testing.T) {
-	mockServer, err := setupMockHTTPServer()
-	if err != nil {
-		t.Fatalf("Setup mock server failed with header error: %v", err)
-	}
+	mockServer := setupMockHTTPServer(t)
 	defer mockServer.Close()
 
 	apiClient := &api.APIClient{
