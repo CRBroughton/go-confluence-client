@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 )
 
 type SpaceResponse struct {
@@ -39,24 +38,15 @@ type Space struct {
 
 func (apiClient *APIClient) GetSpaces() ([]Space, error) {
 	url := fmt.Sprintf("%s/wiki/api/v2/spaces", apiClient.Url)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
+	headers := map[string]string{
+		"Content-Type": "application/json",
+		"Accept":       "application/json",
 	}
-
-	req.SetBasicAuth(apiClient.Email, apiClient.ApiToken)
-	req.Header.Set("Accept", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := apiClient.Request("GET", url, headers, nil)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
 
 	var spaceResponse SpaceResponse
 	if err := json.NewDecoder(resp.Body).Decode(&spaceResponse); err != nil {
@@ -68,24 +58,15 @@ func (apiClient *APIClient) GetSpaces() ([]Space, error) {
 
 func (apiClient *APIClient) FindSpaceByKey(spaceKey string) (*Space, error) {
 	url := fmt.Sprintf("%s/wiki/api/v2/spaces", apiClient.Url)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
+	headers := map[string]string{
+		"Content-Type": "application/json",
+		"Accept":       "application/json",
 	}
-
-	req.SetBasicAuth(apiClient.Email, apiClient.ApiToken)
-	req.Header.Set("Accept", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := apiClient.Request("GET", url, headers, nil)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
 
 	var spaceResponse SpaceResponse
 	if err := json.NewDecoder(resp.Body).Decode(&spaceResponse); err != nil {

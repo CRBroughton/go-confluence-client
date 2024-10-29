@@ -54,7 +54,7 @@ func TestAPIClientRequestSetsRequiredHeaders(t *testing.T) {
 		"Accept":       "application/json",
 	}
 
-	resp, err := apiClient.Request("GET", mockServer.URL, headers)
+	resp, err := apiClient.Request("GET", mockServer.URL, headers, nil)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
@@ -78,7 +78,7 @@ func TestAPIClientRequestMissingRequiredHeaders(t *testing.T) {
 		ApiToken:   "dummyToken",
 	}
 
-	resp, err := apiClient.Request("GET", mockServer.URL, nil)
+	resp, err := apiClient.Request("GET", mockServer.URL, nil, nil)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}

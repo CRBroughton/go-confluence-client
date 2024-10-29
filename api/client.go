@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 )
@@ -24,8 +25,10 @@ func NewClient(url, email, apiToken string) *APIClient {
 
 func (apiClient *APIClient) Request(
 	requestType, url string,
-	headers map[string]string) (*http.Response, error) {
-	req, err := http.NewRequest(requestType, url, nil)
+	headers map[string]string,
+	body io.Reader,
+) (*http.Response, error) {
+	req, err := http.NewRequest(requestType, url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +43,6 @@ func (apiClient *APIClient) Request(
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)

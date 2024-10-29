@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
 )
 
 type Page struct {
@@ -37,24 +36,15 @@ type GetPagesResponse struct {
 func (apiClient *APIClient) GetPages() ([]Page, error) {
 	url := fmt.Sprintf("%s/wiki/api/v2/pages?body-format=storage", apiClient.Url)
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
+	headers := map[string]string{
+		"Content-Type": "application/json",
+		"Accept":       "application/json",
 	}
-
-	req.SetBasicAuth(apiClient.Email, apiClient.ApiToken)
-	req.Header.Set("Accept", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := apiClient.Request("GET", url, headers, nil)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("failed to get the confluence pages: status code %d", resp.StatusCode)
-	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -74,24 +64,14 @@ func (apiClient *APIClient) GetPages() ([]Page, error) {
 func (apiClient *APIClient) GetPageByID(pageID string) (*Page, error) {
 	url := fmt.Sprintf("%s/wiki/api/v2/pages/%s?body-format=storage", apiClient.Url, pageID)
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
+	headers := map[string]string{
+		"Accept": "application/json",
 	}
-
-	req.SetBasicAuth(apiClient.Email, apiClient.ApiToken)
-	req.Header.Set("Accept", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := apiClient.Request("GET", url, headers, nil)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("failed to get the confluence page: status code %d", resp.StatusCode)
-	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -131,25 +111,15 @@ func (apiClient *APIClient) UpdatePageByID(pageID, title, pageBody string, versi
 		return nil, err
 	}
 
-	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(jsonData))
-	if err != nil {
-		return nil, err
+	headers := map[string]string{
+		"Content-Type": "application/json",
+		"Accept":       "application/json",
 	}
-
-	req.SetBasicAuth(apiClient.Email, apiClient.ApiToken)
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := apiClient.Request("PUT", url, headers, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("failed to update the confluence page: status code %d", resp.StatusCode)
-	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
