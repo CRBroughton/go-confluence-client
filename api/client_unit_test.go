@@ -24,7 +24,11 @@ func TestTheNewClientMethodReturnsAValidAPIClient(t *testing.T) {
 
 func setupMockHTTPServer(t *testing.T) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Validate headers dynamically in each request
+		if r.Header.Get("Accept") == "" || r.Header.Get("Content-Type") == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
 		if r.Header.Get("Accept") != "application/json" {
 			t.Errorf("Expected Accept header to be 'application/json', got '%s'", r.Header.Get("Accept"))
 		}
@@ -39,9 +43,10 @@ func TestAPIClientRequestSetsRequiredHeaders(t *testing.T) {
 	defer mockServer.Close()
 
 	apiClient := &api.APIClient{
-		HttpClient: http.DefaultClient,
-		Email:      "test@example.com",
-		ApiToken:   "dummyToken",
+		Url:        "https://your.domain.com",
+		Email:      "crbroughton@posteo.uk",
+		ApiToken:   "12345678",
+		HttpClient: &http.Client{},
 	}
 
 	headers := map[string]string{
@@ -65,14 +70,16 @@ func TestAPIClientRequestMissingRequiredHeaders(t *testing.T) {
 	defer mockServer.Close()
 
 	apiClient := &api.APIClient{
-		HttpClient: http.DefaultClient,
-		Email:      "test@example.com",
-		ApiToken:   "dummyToken",
+		Url:        "https://your.domain.com",
+		Email:      "crbroughton@posteo.uk",
+		ApiToken:   "12345678",
+		HttpClient: &http.Client{},
 	}
 
-	resp, err := apiClient.Request("GET", mockServer.URL, nil, nil)
-	if err != nil {
-		t.Fatalf("Expected no error, got %v", err)
+	_, err := apiClient.Request("GET", mockServer.URL, nil, nil)
+
+	if err == nil {
+		t.Fatalf("Expected an error due to missing required headers, got nil")
 	}
-	defer resp.Body.Close()
+	assert.Equal(t, "unexpected status code: 400", err.Error())
 }
