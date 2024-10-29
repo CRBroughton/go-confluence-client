@@ -30,6 +30,46 @@ type PageVersion struct {
 	Message string `json:"message"`
 }
 
+type GetPagesResponse struct {
+	Results []Page `json:"results"`
+}
+
+func (apiClient *APIClient) GetPages() ([]Page, error) {
+	url := fmt.Sprintf("%s/wiki/api/v2/pages?body-format=storage", apiClient.Url)
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.SetBasicAuth(apiClient.Email, apiClient.ApiToken)
+	req.Header.Set("Accept", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to get the confluence pages: status code %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var pages GetPagesResponse
+	err = json.Unmarshal(body, &pages)
+	if err != nil {
+		return nil, err
+	}
+
+	return pages.Results, nil
+}
+
 // Retrieves a Confluence page via it's ID
 func (apiClient *APIClient) GetPageByID(pageID string) (*Page, error) {
 	url := fmt.Sprintf("%s/wiki/api/v2/pages/%s?body-format=storage", apiClient.Url, pageID)

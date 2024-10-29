@@ -7,6 +7,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestGetPages(t *testing.T) {
+	baseURL, email, apiToken, _ := api.GetENVValues(t)
+	client := api.NewClient(baseURL, email, apiToken)
+
+	pages, err := client.GetPages()
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+
+	assert.Equal(t, "test page", pages[5].Title)
+	assert.Equal(t, "<p>test content</p>", pages[5].Body.Storage.Value)
+}
+
 func TestGetPageByID(t *testing.T) {
 	baseURL, email, apiToken, pageID := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
