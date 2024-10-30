@@ -134,3 +134,57 @@ func (apiClient *APIClient) UpdatePageByID(pageID, title, pageBody string, versi
 
 	return &updatedPage, nil
 }
+
+type NewPage struct {
+	SpaceId string `json:"spaceId"`
+	Status  string `json:"status"`
+	Title   string `json:"title"`
+	Body    struct {
+		Representation string `json:"representation"`
+		Value          string `json:"value"`
+	} `json:"body"`
+}
+
+func (apiClient *APIClient) CreatePage(title, spaceId, pageBody string) (*Page, error) {
+	url := fmt.Sprintf("%s/wiki/api/v2/pages?body-format=storage", apiClient.Url)
+
+	pageData := NewPage{
+		SpaceId: spaceId,
+		Status:  "current",
+		Title:   title,
+		Body: struct {
+			Representation string "json:\"representation\""
+			Value          string "json:\"value\""
+		}{
+			Value:          pageBody,
+			Representation: "storage",
+		},
+	}
+	jsonData, err := json.Marshal(pageData)
+	if err != nil {
+		return nil, err
+	}
+
+	headers := map[string]string{
+		"Content-Type": "application/json",
+		"Accept":       "application/json",
+	}
+	resp, err := apiClient.Request("POST", url, headers, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var returnedPage Page
+	err = json.Unmarshal(body, &returnedPage)
+	if err != nil {
+		return nil, err
+	}
+
+	return &returnedPage, nil
+}

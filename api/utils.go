@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func GetENVValues(t *testing.T) (string, string, string, string) {
+func GetENVValues(t *testing.T) (string, string, string, string, string) {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		t.Fatalf("Error loading .env file: %v", err)
@@ -16,10 +16,11 @@ func GetENVValues(t *testing.T) (string, string, string, string) {
 	email := os.Getenv("CONFLUENCE_EMAIL")
 	apiToken := os.Getenv("CONFLUENCE_API_TOKEN")
 	pageID := os.Getenv("CONFLUENCE_PAGE_ID")
+	spaceID := os.Getenv("CONFLUENCE_SPACE_ID")
 
-	if baseURL == "" || email == "" || apiToken == "" || pageID == "" {
+	if baseURL == "" || email == "" || apiToken == "" || pageID == "" || spaceID == "" {
 		t.Skip("Skipping integration tests; Please provide the required environment variables")
 	}
 
-	return baseURL, email, apiToken, pageID
+	return baseURL, email, apiToken, pageID, spaceID
 }

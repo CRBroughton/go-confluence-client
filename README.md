@@ -6,13 +6,14 @@ and should be considered unstable.
 The below is a table of working and in-progress
 features:
 
-| Feature                    |  Supported  |
-| -------------------------  |  :-------:  |
-| Page - Get pages           |     ✅      |
-| Pages - Get page by ID     |     ✅      |
-| Pages - Update page by ID  |     ✅      |
-| Spaces - Get spaces        |     ✅      |
-| Spaces - Get space by Key  |     ✅      |
+| Feature                     |  Supported  |
+| -------------------------   |  :-------:  |
+| Page - Create page          |     ✅      |
+| Page - Get pages            |     ✅      |
+| Pages - Get page by ID      |     ✅      |
+| Pages - Update page by ID   |     ✅      |
+| Spaces - Get spaces         |     ✅      |
+| Spaces - Get space by Key   |     ✅      |
 
 ## Testing
 

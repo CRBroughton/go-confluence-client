@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetPages(t *testing.T) {
-	baseURL, email, apiToken, _ := api.GetENVValues(t)
+	baseURL, email, apiToken, _, _ := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
 	pages, err := client.GetPages()
@@ -21,7 +21,7 @@ func TestGetPages(t *testing.T) {
 }
 
 func TestGetPageByID(t *testing.T) {
-	baseURL, email, apiToken, pageID := api.GetENVValues(t)
+	baseURL, email, apiToken, pageID, _ := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
 	page, err := client.GetPageByID(pageID)
@@ -39,7 +39,7 @@ func TestGetPageByID(t *testing.T) {
 }
 
 func TestUpdatePageByID(t *testing.T) {
-	baseURL, email, apiToken, pageID := api.GetENVValues(t)
+	baseURL, email, apiToken, pageID, _ := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
 	page, err := client.GetPageByID(pageID)
@@ -62,7 +62,7 @@ func TestUpdatePageByID(t *testing.T) {
 }
 
 func ResetState(t *testing.T) {
-	baseURL, email, apiToken, pageID := api.GetENVValues(t)
+	baseURL, email, apiToken, pageID, _ := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
 	page, err := client.GetPageByID(pageID)
@@ -76,4 +76,17 @@ func ResetState(t *testing.T) {
 	if err != nil {
 		t.Error("failed to update the page:", err.Error(), page.ID)
 	}
+}
+
+func TestCreatesANewPage(t *testing.T) {
+	baseURL, email, apiToken, _, spaceID := api.GetENVValues(t)
+	client := api.NewClient(baseURL, email, apiToken)
+
+	page, err := client.CreatePage("new page title", spaceID, "body here")
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+
+	assert.Equal(t, "new page title", page.Title)
+	assert.Equal(t, "body here", page.Body.Storage.Value)
 }

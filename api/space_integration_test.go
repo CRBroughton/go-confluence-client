@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetSpaces(t *testing.T) {
-	baseURL, email, apiToken, _ := api.GetENVValues(t)
+	baseURL, email, apiToken, _, _ := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
 	spaces, err := client.GetSpaces()
@@ -25,7 +25,7 @@ func TestGetSpaces(t *testing.T) {
 }
 
 func TestGetSpaceByID(t *testing.T) {
-	baseURL, email, apiToken, _ := api.GetENVValues(t)
+	baseURL, email, apiToken, _, _ := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
 	space, err := client.FindSpaceByKey("TS")
