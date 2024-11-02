@@ -81,3 +81,23 @@ func (apiClient *APIClient) FindSpaceByKey(spaceKey string) (*Space, error) {
 
 	return nil, errors.New("space not found")
 }
+
+func (apiClient *APIClient) GetSpaceByID(spaceID string) (*Space, error) {
+	url := fmt.Sprintf("%s/wiki/api/v2/spaces/%s", apiClient.Url, spaceID)
+	headers := map[string]string{
+		"Accept": "application/json",
+	}
+
+	resp, err := apiClient.Request("GET", url, headers, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var spaceResponse Space
+	if err := json.NewDecoder(resp.Body).Decode(&spaceResponse); err != nil {
+		return nil, err
+	}
+
+	return &spaceResponse, nil
+}

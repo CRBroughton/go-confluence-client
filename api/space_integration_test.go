@@ -24,7 +24,7 @@ func TestGetSpaces(t *testing.T) {
 
 }
 
-func TestGetSpaceByID(t *testing.T) {
+func TestGetSpaceByKey(t *testing.T) {
 	baseURL, email, apiToken, _, _ := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
 
@@ -35,4 +35,16 @@ func TestGetSpaceByID(t *testing.T) {
 
 	assert.Equal(t, "65853", space.ID)
 	assert.Equal(t, "Test Space", space.Name)
+}
+
+func TestGetSpaceByID(t *testing.T) {
+	baseURL, email, apiToken, _, spaceID := api.GetENVValues(t)
+	client := api.NewClient(baseURL, email, apiToken)
+
+	space, err := client.GetSpaceByID(spaceID)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+
+	assert.Equal(t, "65853", space.ID)
 }
