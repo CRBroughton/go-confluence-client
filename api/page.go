@@ -188,3 +188,28 @@ func (apiClient *APIClient) CreatePage(title, spaceId, pageBody string) (*Page, 
 
 	return &returnedPage, nil
 }
+
+func (apiClient *APIClient) DeletePage(pageID string) (int, error) {
+	url := fmt.Sprintf("%s/wiki/api/v2/pages/%s", apiClient.Url, pageID)
+
+	fmt.Println(pageID)
+
+	resp, err := apiClient.Request("DELETE", url, nil, nil)
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return 0, err
+	}
+
+	var returnedCode int
+	err = json.Unmarshal(body, &returnedCode)
+	if err != nil {
+		return 0, err
+	}
+
+	return returnedCode, nil
+}

@@ -1,7 +1,9 @@
 package api_test
 
 import (
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/crbroughton/go-confluence-client/api"
 	"github.com/stretchr/testify/assert"
@@ -78,15 +80,31 @@ func ResetState(t *testing.T) {
 	}
 }
 
-func TestCreatesANewPage(t *testing.T) {
+func TestCreatesANewPageAndDeletesThePage(t *testing.T) {
 	baseURL, email, apiToken, _, spaceID := api.GetENVValues(t)
 	client := api.NewClient(baseURL, email, apiToken)
+	var createdPageID string
 
-	page, err := client.CreatePage("new page title", spaceID, "body here")
-	if err != nil {
-		t.Fatalf("expected no error, got %v", err)
-	}
+	t.Run("Creating the page", func(t *testing.T) {
+		page, err := client.CreatePage("new page title", spaceID, "body here")
+		if err != nil {
+			t.Fatalf("expected no error, got %v", err)
+		}
+		createdPageID = page.ID
+		assert.Equal(t, "new page title", page.Title)
+		assert.Equal(t, "body here", page.Body.Storage.Value)
+	})
+	// Wait to ensure the page creation is fully processed
+	time.Sleep(5 * time.Second)
+	t.Run("Deletes the created page", func(t *testing.T) {
+		responseCode, err := client.DeletePage(createdPageID)
 
-	assert.Equal(t, "new page title", page.Title)
-	assert.Equal(t, "body here", page.Body.Storage.Value)
+		if err != nil {
+			if !strings.Contains(err.Error(), "0") {
+				t.Fatalf("got the wrong error code, got %v", err)
+			}
+		}
+
+		assert.Equal(t, 0, responseCode)
+	})
 }
