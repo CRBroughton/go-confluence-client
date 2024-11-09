@@ -1,5 +1,11 @@
 # go-confluence-client
 
+## 0.3.0
+
+### Minor Changes
+
+- 1a2abd5: create GetSpaceProperties method
+
 ## 0.2.0
 
 ### Minor Changes
